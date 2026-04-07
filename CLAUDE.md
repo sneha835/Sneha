@@ -44,3 +44,21 @@ When a user asks to research a topic and send results to NotebookLM:
 ## Example Command
 
 > "Use the yt-research skill to find the 25 latest trending videos on AI agents. Once we have those videos, send them over to NotebookLM using the notebooklm skill. Give me its analysis on the top findings, then have NotebookLM create an infographic in a handwritten / chalkboard style depicting that analysis."
+
+## Marketing Skills
+
+35 marketing skills from [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) are installed in `.claude/skills/`. Categories:
+
+- **CRO**: page-cro, signup-flow-cro, onboarding-cro, form-cro, popup-cro, paywall-upgrade-cro
+- **Content & Copy**: copywriting, copy-editing, cold-email, email-sequence, social-content, lead-magnets
+- **SEO & Discovery**: seo-audit, ai-seo, programmatic-seo, site-architecture, competitor-alternatives, schema-markup, content-strategy
+- **Paid & Measurement**: paid-ads, ad-creative, ab-test-setup, analytics-tracking
+- **Growth & Retention**: referral-program, free-tool-strategy, churn-prevention, community-marketing
+- **Sales & GTM**: revops, sales-enablement, launch-strategy, pricing-strategy
+- **Strategy**: marketing-ideas, marketing-psychology, customer-research, product-marketing-context
+
+### Foundation: Product Marketing Context
+Run `/product-marketing-context` first to set up your product/audience context — all other marketing skills reference this for consistency.
+
+### Marketing Tools
+CLI tools and integration guides are in `.claude/tools/`. See `.claude/tools/REGISTRY.md` for the full index.
