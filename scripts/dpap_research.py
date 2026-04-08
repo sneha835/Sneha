@@ -10,6 +10,7 @@ import os
 import re
 import subprocess
 import sys
+import time
 from datetime import datetime
 from urllib.parse import quote_plus
 
@@ -84,9 +85,26 @@ def step_trends(product):
     # pytrends max 5 keywords
     keywords = keywords[:5]
 
-    try:
-        pytrends = TrendReq(hl="en-IN", tz=330)
+    # Retry logic for Google Trends rate limiting
+    max_retries = 3
+    pytrends = None
+    for attempt in range(max_retries):
+        try:
+            pytrends = TrendReq(hl="en-IN", tz=330, retries=2, backoff_factor=1)
+            break
+        except Exception as e:
+            if attempt < max_retries - 1:
+                wait = (attempt + 1) * 5
+                print(f"  [Trends] Rate limited, retrying in {wait}s... (attempt {attempt + 1}/{max_retries})")
+                time.sleep(wait)
+            else:
+                result["status"] = "error"
+                result["error"] = f"Google Trends connection failed after {max_retries} attempts: {str(e)}"
+                result["passed"] = True  # Don't block report for trends failure
+                result["summary"] = "Trends unavailable (rate limited) — skipped, not blocking"
+                return result
 
+    try:
         # 12-month interest
         pytrends.build_payload(keywords[:3], cat=0, timeframe="today 12-m", geo="IN")
         iot = pytrends.interest_over_time()
@@ -159,6 +177,8 @@ def step_trends(product):
     except Exception as e:
         result["status"] = "error"
         result["error"] = f"Google Trends error (likely rate limited): {str(e)}"
+        result["passed"] = True  # Don't block report for trends failure
+        result["summary"] = "Trends unavailable (rate limited) — skipped, not blocking"
 
     return result
 # ── STEP 2: Amazon India ──────────────────────────────────────────────────────
