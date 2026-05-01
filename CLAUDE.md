@@ -64,11 +64,18 @@ Search YouTube for videos on a topic. Returns structured metadata (title, URL, a
 python scripts/yt_research.py --query "TOPIC" --count 25 --output summary
 ```
 
-### Social Media Research
+### `/social-research <product>`
 Multi-platform research across YouTube, Reddit, Google News, Instagram, Quora.
 
 ```bash
-python scripts/dpap_social_research.py --product "PRODUCT" --platforms youtube,reddit,google --output report
+python scripts/dpap_social_research.py --product "PRODUCT" --platforms youtube,reddit,google,instagram,quora --output report
+```
+
+### `/keyword-research <topic>`
+Get top 10 keywords and Google Trends search volume for any product or topic (India).
+
+```bash
+python scripts/keyword_research.py --topic "TOPIC" --count 10 --output report
 ```
 
 ### `/notebooklm <action>`
