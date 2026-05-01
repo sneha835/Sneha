@@ -3,6 +3,7 @@
 
 Multi-platform research: YouTube, Reddit, Google News, Instagram, Quora.
 Designed for BabyOrgano product research across Indian platforms.
+No Playwright dependency — uses manual fallback URLs for Instagram/Quora.
 """
 
 import argparse
@@ -10,12 +11,20 @@ import json
 import subprocess
 import sys
 import re
+import random
+import time
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from urllib.parse import quote_plus
 
 
-# ── Sentiment keywords ──────────────────────────────────────────────────────
+USER_AGENTS = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Safari/605.1.15",
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/123.0.0.0",
+]
 
 POSITIVE_KEYWORDS = [
     "love", "amazing", "great", "excellent", "best", "recommend", "effective",
@@ -36,6 +45,29 @@ COMPLAINT_KEYWORDS = [
     "fake", "scam", "waste", "not working", "dangerous", "worst", "recall",
     "ban", "unsafe", "risk", "warning",
 ]
+
+
+def get_headers():
+    return {
+        "User-Agent": random.choice(USER_AGENTS),
+        "Accept-Language": "en-IN,en;q=0.9",
+    }
+
+
+def http_get_with_retry(url, headers=None, timeout=15, max_retries=3):
+    import requests
+    if headers is None:
+        headers = get_headers()
+    for attempt in range(max_retries):
+        try:
+            resp = requests.get(url, headers=headers, timeout=timeout, allow_redirects=True)
+            return resp
+        except Exception as e:
+            if attempt < max_retries - 1:
+                wait = (attempt + 1) * 3
+                time.sleep(wait)
+            else:
+                raise e
 
 
 # ── YouTube Research (via yt-dlp) ────────────────────────────────────────────
@@ -87,7 +119,6 @@ def research_youtube(product, yt_count=15):
                     }
                     all_videos[vid_id] = video
 
-                    # Flag complaint/problem videos
                     title_lower = title.lower()
                     desc_lower = (data.get("description", "") or "").lower()
                     if any(kw in title_lower or kw in desc_lower for kw in COMPLAINT_KEYWORDS):
@@ -98,7 +129,6 @@ def research_youtube(product, yt_count=15):
         except (subprocess.TimeoutExpired, Exception):
             continue
 
-    # Sort by views, take top 15
     sorted_videos = sorted(all_videos.values(), key=lambda v: v.get("views") or 0, reverse=True)[:15]
 
     return {
@@ -114,9 +144,8 @@ def research_youtube(product, yt_count=15):
 
 def research_reddit(product):
     """Search Reddit using public JSON API (no login needed)."""
-    import requests
-
-    headers = {"User-Agent": "BabyOrgano-Research/1.0"}
+    headers = get_headers()
+    headers["User-Agent"] = "BabyOrgano-Research/1.0"
     subreddits = ["", "india", "IndianParents", "Ayurveda", "supplements"]
     all_posts = {}
     positive_count = 0
@@ -129,7 +158,7 @@ def research_reddit(product):
             url = f"https://www.reddit.com/search.json?q={quote_plus(product)}&sort=top&t=year&limit=25"
 
         try:
-            resp = requests.get(url, headers=headers, timeout=15)
+            resp = http_get_with_retry(url, headers=headers, timeout=15)
             if resp.status_code == 200:
                 data = resp.json()
                 for child in data.get("data", {}).get("children", []):
@@ -142,7 +171,6 @@ def research_reddit(product):
                     selftext = post.get("selftext", "")
                     combined = (title + " " + selftext).lower()
 
-                    # Sentiment analysis
                     pos = sum(1 for kw in POSITIVE_KEYWORDS if kw in combined)
                     neg = sum(1 for kw in NEGATIVE_KEYWORDS if kw in combined)
                     positive_count += pos
@@ -159,7 +187,8 @@ def research_reddit(product):
                         "sentiment_negative": neg,
                     }
             elif resp.status_code == 429:
-                continue  # Rate limited, skip
+                time.sleep(5)
+                continue
         except Exception:
             continue
 
@@ -191,19 +220,14 @@ def research_reddit(product):
 
 def research_google_news(product):
     """Search Google News via RSS feed (no login needed)."""
-    import requests
-
     url = f"https://news.google.com/rss/search?q={quote_plus(product)}&hl=en-IN&gl=IN&ceid=IN:en"
-    headers = {"User-Agent": "BabyOrgano-Research/1.0"}
-
     FLAG_KEYWORDS = ["recall", "ban", "unsafe", "risk", "warning", "fssai", "fake"]
     articles = []
     flagged_articles = []
 
     try:
-        resp = requests.get(url, headers=headers, timeout=15)
+        resp = http_get_with_retry(url, timeout=15)
         if resp.status_code == 200:
-            # Parse RSS XML
             try:
                 root = ET.fromstring(resp.text)
                 channel = root.find("channel")
@@ -221,7 +245,6 @@ def research_google_news(product):
                             "url": link,
                         }
 
-                        # Check for flags
                         title_lower = title.lower()
                         flags = [kw for kw in FLAG_KEYWORDS if kw in title_lower]
                         if flags:
@@ -230,7 +253,6 @@ def research_google_news(product):
 
                         articles.append(article)
             except ET.ParseError:
-                # Fallback: regex parsing
                 titles = re.findall(r"<title><!\[CDATA\[(.*?)\]\]></title>", resp.text)
                 links = re.findall(r"<link>(https?://[^<]+)</link>", resp.text)
                 for i, title in enumerate(titles[:10]):
@@ -254,135 +276,60 @@ def research_google_news(product):
     }
 
 
-# ── Instagram Research (Playwright) ─────────────────────────────────────────
+# ── Instagram Research (Manual URLs — no Playwright) ─────────────────────────
 
 def research_instagram(product):
-    """Check Instagram hashtag popularity using Playwright."""
+    """Generate Instagram hashtag search URLs for manual review."""
     product_tag = re.sub(r'[^a-zA-Z0-9]', '', product.lower())
     hashtags = [
         product_tag, "kidshealth", "indianmom", "ayurveda",
         "naturalremedies", "kidsnutrition", "immunitybooster", "healthykids",
+        "babyorgano", "ayurvedicforkids",
     ]
 
     results = []
-
-    try:
-        from playwright.sync_api import sync_playwright
-    except ImportError:
-        return {
-            "platform": "instagram",
-            "status": "skipped",
-            "reason": "Playwright not available",
-            "hashtags": [],
-        }
-
-    try:
-        with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True)
-            page = browser.new_page()
-
-            for tag in hashtags:
-                try:
-                    page.goto(f"https://www.instagram.com/explore/tags/{tag}/", timeout=15000)
-                    page.wait_for_timeout(3000)
-                    content = page.content()
-
-                    # Try to extract post count
-                    post_count = 0
-                    count_match = re.search(r'([\d,]+)\s*posts?', content, re.IGNORECASE)
-                    if count_match:
-                        post_count = int(count_match.group(1).replace(",", ""))
-
-                    # Determine popularity level
-                    if post_count >= 1_000_000:
-                        popularity = "very_high"
-                    elif post_count >= 100_000:
-                        popularity = "high"
-                    elif post_count >= 10_000:
-                        popularity = "medium"
-                    elif post_count > 0:
-                        popularity = "low"
-                    else:
-                        popularity = "unknown"
-
-                    results.append({
-                        "hashtag": f"#{tag}",
-                        "post_count": post_count,
-                        "popularity": popularity,
-                    })
-                except Exception:
-                    results.append({
-                        "hashtag": f"#{tag}",
-                        "post_count": 0,
-                        "popularity": "error",
-                    })
-
-            browser.close()
-    except Exception as e:
-        return {
-            "platform": "instagram",
-            "status": "error",
-            "reason": str(e),
-            "hashtags": results,
-        }
+    for tag in hashtags:
+        results.append({
+            "hashtag": f"#{tag}",
+            "url": f"https://www.instagram.com/explore/tags/{tag}/",
+            "note": "Open in browser to check post count and top posts",
+        })
 
     return {
         "platform": "instagram",
         "status": "completed",
+        "method": "manual_urls",
         "hashtags": results,
+        "instructions": "Open each URL in a browser to check hashtag popularity and top posts.",
     }
 
 
-# ── Quora Research (Playwright) ──────────────────────────────────────────────
+# ── Quora Research (Manual URLs — no Playwright) ─────────────────────────────
 
 def research_quora(product):
-    """Search Quora for questions about the product."""
-    try:
-        from playwright.sync_api import sync_playwright
-    except ImportError:
-        return {
-            "platform": "quora",
-            "status": "skipped",
-            "reason": "Playwright not available",
-            "questions": [],
-        }
+    """Generate Quora search URLs for manual review."""
+    queries = [
+        product,
+        f"{product} for kids india",
+        f"best ayurvedic {product}",
+        f"{product} side effects children",
+        f"{product} vs allopathy",
+    ]
 
-    questions = []
-
-    try:
-        with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True)
-            page = browser.new_page()
-            url = f"https://www.quora.com/search?q={quote_plus(product + ' india')}&type=question"
-            page.goto(url, timeout=20000)
-            page.wait_for_timeout(5000)
-
-            content = page.content()
-            # Extract question titles from page
-            q_matches = re.findall(r'<span[^>]*class="[^"]*q-text[^"]*"[^>]*>(.*?)</span>', content)
-            if not q_matches:
-                # Fallback: look for any question-like text
-                q_matches = re.findall(r'(?:What|How|Why|Which|Is|Are|Can|Does|Do|Should|Where|When)[^<?"]{10,120}\??', content)
-
-            for q in q_matches[:10]:
-                q_clean = re.sub(r'<[^>]+>', '', q).strip()
-                if len(q_clean) > 10:
-                    questions.append({"title": q_clean})
-
-            browser.close()
-    except Exception as e:
-        return {
-            "platform": "quora",
-            "status": "error",
-            "reason": str(e),
-            "questions": questions,
-        }
+    results = []
+    for q in queries:
+        results.append({
+            "query": q,
+            "url": f"https://www.quora.com/search?q={quote_plus(q)}&type=question",
+            "note": "Open in browser to read community discussions",
+        })
 
     return {
         "platform": "quora",
         "status": "completed",
-        "total_questions": len(questions),
-        "questions": questions,
+        "method": "manual_urls",
+        "queries": results,
+        "instructions": "Open each URL in a browser to read relevant Quora discussions.",
     }
 
 
@@ -399,7 +346,7 @@ def print_report(results, product):
         platform = platform_data.get("platform", "unknown")
 
         if platform == "youtube":
-            print(f"  ── YOUTUBE {'─'*56}")
+            print(f"  -- YOUTUBE {'--'*28}")
             print(f"  Total videos found: {platform_data.get('total_found', 0)}")
             print(f"  Complaint videos: {len(platform_data.get('complaint_videos', []))}")
             print()
@@ -412,7 +359,7 @@ def print_report(results, product):
             print()
 
         elif platform == "reddit":
-            print(f"  ── REDDIT {'─'*57}")
+            print(f"  -- REDDIT {'--'*28}")
             sentiment = platform_data.get("sentiment", {})
             print(f"  Total posts: {platform_data.get('total_posts', 0)}")
             print(f"  Sentiment: {sentiment.get('overall', 'neutral')} "
@@ -424,22 +371,25 @@ def print_report(results, product):
             print()
 
         elif platform == "google_news":
-            print(f"  ── GOOGLE NEWS {'─'*52}")
+            print(f"  -- GOOGLE NEWS {'--'*26}")
             print(f"  Total articles: {platform_data.get('total_articles', 0)}")
             print(f"  Flagged articles: {platform_data.get('flagged_count', 0)}")
             print()
             for i, a in enumerate(platform_data.get("articles", [])[:10], 1):
-                flags = f" ⚠ FLAGGED: {', '.join(a['flags'])}" if a.get("flags") else ""
+                flags = f" [!] FLAGGED: {', '.join(a['flags'])}" if a.get("flags") else ""
                 print(f"    {i}. {a['title']}{flags}")
                 if a.get("source"):
                     print(f"       Source: {a['source']}")
             print()
 
         elif platform == "instagram":
-            print(f"  ── INSTAGRAM {'─'*54}")
-            status = platform_data.get("status", "unknown")
-            if status == "skipped":
-                print(f"  Status: Skipped ({platform_data.get('reason', '')})")
+            print(f"  -- INSTAGRAM {'--'*27}")
+            if platform_data.get("method") == "manual_urls":
+                print(f"  Method: Manual URLs (open in browser)")
+                print(f"  {platform_data.get('instructions', '')}")
+                print()
+                for h in platform_data.get("hashtags", []):
+                    print(f"    {h['hashtag']}: {h['url']}")
             else:
                 for h in platform_data.get("hashtags", []):
                     count = h.get("post_count", 0)
@@ -448,10 +398,13 @@ def print_report(results, product):
             print()
 
         elif platform == "quora":
-            print(f"  ── QUORA {'─'*58}")
-            status = platform_data.get("status", "unknown")
-            if status == "skipped":
-                print(f"  Status: Skipped ({platform_data.get('reason', '')})")
+            print(f"  -- QUORA {'--'*29}")
+            if platform_data.get("method") == "manual_urls":
+                print(f"  Method: Manual URLs (open in browser)")
+                print(f"  {platform_data.get('instructions', '')}")
+                print()
+                for q in platform_data.get("queries", []):
+                    print(f"    \"{q['query']}\": {q['url']}")
             else:
                 for i, q in enumerate(platform_data.get("questions", [])[:10], 1):
                     print(f"    {i}. {q['title']}")
