@@ -112,3 +112,14 @@ Run `/product-marketing-context` first to set up your product/audience context �
 
 ### Marketing Tools
 CLI tools and integration guides are in `.claude/tools/`. See `.claude/tools/REGISTRY.md` for the full index.
+
+## Founder & Operator Skills
+
+Additional skill/command packs installed for company-building tasks (fundraising, hiring, ops, positioning) beyond marketing:
+
+- **[emotixco/claude-skills-founder](https://github.com/emotixco/claude-skills-founder)** — 13 slash commands in `.claude/commands/`: `/validate-idea`, `/product-brief`, `/competitor-matrix`, `/persona-gen`, `/user-interviews`, `/mvp-scope`, `/pricing-strategy`, `/go-to-market`, `/landing-page`, `/email-sequence`, `/pitch-deck`, `/fundraise-prep`, `/metrics-dashboard`.
+- **[mohamedameen-io/StartupKit](https://github.com/mohamedameen-io/StartupKit)** — 11-phase ideation pipeline in `.claude/skills/` (`startupkit` orchestrator + `sk-diverge`, `sk-niche`, `sk-competitors`, `sk-positioning`, `sk-offer`, `sk-validate`, `sk-money`, `sk-leads`, `sk-skills`, `sk-pitch`, `sk-export`). Start with `/startupkit` to create a session.
+- **[dazuck/operator-skills](https://github.com/dazuck/operator-skills)** — 21 operator skills in `.claude/skills/`: thinking-partner (`coach`, `reality-check`, `interview`), writing (`writeup`, `create-briefing`, `technical-orientation`), Claude workflow tools (`adversarial-verifier`, `handoff`, `show-and-tell`, `prompt-improver`, `skill-customizer`, `ralph-loop-creator`, `sensitive-content-scanner`, `personalize-skills`), startup ops (`inbox-commander`, `credits-inventory`, `monthly-financials`, `investor-audits`, `contract-review`), and people ops (`hiring-helper`, `candidate-screening`).
+- **[mfwarren/entrepreneur-claude-skills](https://github.com/mfwarren/entrepreneur-claude-skills)** — 22 skills in `.claude/skills/` covering finance (`financial-modeling`, `fundraising`, `pitch-deck`, `unit-economics`), product strategy (`market-research`, `competitive-analysis`, `product-market-fit`, `landing-pages`), operations (`sop-builder`, `hiring-playbook`, `automation-workflows`, `delegation-framework`), leadership (`decision-frameworks`, `founder-productivity`, `team-building`), sales (`cold-outreach`, `objection-handling`, `offer-creation`), and marketing (`seo-content`, `email-campaigns`, `social-media`, `MetaAds`). Note: 3 skills from this pack (`copywriting`, `paid-ads`, `pricing-strategy`) were **not installed** because they collide with the existing marketing skill pack of the same name — the marketing-skills versions were kept.
+
+All four packs are MIT licensed.
