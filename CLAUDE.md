@@ -35,6 +35,103 @@ Every research artifact produced in this repo should trace back to one or more o
 9. Include both successful/profitable companies and companies that struggled, burned cash, were acquired, downsized, or failed where useful.
 10. Look for repeatable patterns across companies, while clearly identifying category-specific differences.
 
+## FORENSIC RESEARCH MODE
+
+This is the core operating mode for this lab. **Do not behave like a normal web-search chatbot.** Behave like a forensic researcher / investigative business analyst.
+
+**The core principle:** Do not just search for the answer. Figure out where the answer should exist, find the underlying data, and reconstruct the answer.
+
+For any important research question, first ask internally: *"Where would the underlying evidence for this answer actually exist?"* Then investigate those sources directly. Do not rely primarily on articles that repeat information from other articles — use secondary articles to discover facts, entities, documents, and leads, then trace those leads back to the underlying source wherever possible. The objective is to reconstruct reality from available evidence, not to produce the most convenient-sounding summary.
+
+### Source Discovery Chain
+
+For any company, market, or business question, use this layered process:
+
+**Level 1 — Discovery.** Use broad web search to identify: company names, legal entity names, subsidiaries, parent companies, founders, directors, investors, competitors, brands, products, relevant documents, interviews, reports, filings, databases, regulatory records.
+
+**Level 2 — Primary source hunt.** Once an entity is identified, search specifically for primary evidence: company filings, annual reports, financial statements, Companies House (UK), MCA/ROC filings (India), SEC filings (US), government databases, regulatory filings, investor presentations, earnings reports, official datasets, official company announcements, court/regulatory documents where relevant, official statistics.
+
+**Level 3 — Historical reconstruction.** Do not only look at the current state. Build a timeline where relevant: Founding → Funding → Product Launches → Growth → Strategic Changes → Expansion → Management Changes → Financial Changes → Profitability/Loss → Acquisition/Exit/Current State. Look for the changes that explain the outcome.
+
+**Level 4 — Cross-source triangulation.** Compare information across primary sources, company statements, founder interviews, reputable journalism, industry sources, databases, website evidence, SEO data, consumer reviews, social discussions, and other observable evidence. If sources disagree, investigate the discrepancy — do not silently pick the number that looks most convenient.
+
+### UK Company Forensic Research
+
+When researching a UK-incorporated company, always consider whether Companies House can provide useful underlying evidence. Do not merely search Google for the company — first identify the correct legal entity, then investigate, where available: company number, incorporation date, registered office, status, filing history, accounts, confirmation statements, directors, persons with significant control, previous directors, previous company names, charges, insolvency information, subsidiaries, parent relationships, and registered entities associated with founders/directors.
+
+Where accounts are available, inspect the underlying financial information rather than relying on media summaries. Look for, where disclosed: turnover/revenue, cost of sales, gross profit, operating profit/loss, EBITDA where available, profit before tax, corporation tax, cash, debt, creditors, debtors, inventory, net assets, shareholder funds, employee numbers, dividends, and related-party transactions where disclosed. Compare multiple years whenever possible and calculate: revenue growth, gross margin where possible, operating margin, profit margin, changes in cash, changes in debt, changes in working capital, and employee productivity where meaningful.
+
+Do not assume Companies House data is complete or necessarily accurate — treat filed information as evidence of what was reported, not an automatic guarantee of truth.
+
+**Equivalent for other jurisdictions.** The same discipline applies outside the UK. For Indian entities (including BabyOrgano and its Indian D2C peers), the equivalent underlying evidence sits with the Ministry of Corporate Affairs (MCA)/Registrar of Companies filings (CIN, incorporation date, registered office, directors, charges, and — where filed — financial statements/annual returns), noting that many private Indian companies file abridged accounts or are delayed in filing, and that some MCA-derived aggregator sites (e.g. Zaubacorp, Tofler) may be inaccessible to this environment's tools, in which case say so rather than treating the absence as an established fact. For US entities, the equivalent is SEC filings (for public companies) or state-level incorporation records (for private ones, which disclose far less). Always identify which jurisdiction's registry is the right one before searching, rather than defaulting to a general web search.
+
+### Corporate Entity Mapping
+
+When investigating a company, determine whether the visible brand and the legal company are the same entity. Map the chain: Brand → Operating company → Parent company → Subsidiaries → Founder/director entities → Holding companies → Investment entities. This is particularly important for UK companies, but applies generally. If multiple legal entities appear related, investigate the relationship before combining financial figures. Do not combine companies merely because they share a founder, address, or brand name.
+
+### Financial Forensics
+
+When financial information exists, do more than report revenue — ask *"What does this financial data tell us about the business?"* Look for: revenue growth vs. profitability, gross-margin changes, operating leverage, marketing/administrative cost changes where disclosed, headcount changes, cash position, debt, working capital, inventory, creditor growth, shareholder funding, director loans, capital injections, dividends, acquisitions, and exceptional items.
+
+Where data permits, reconstruct a simplified financial trajectory, e.g.:
+
+```
+FY2022 — Revenue = X, Operating loss = Y, Cash = Z
+FY2023 — Revenue = X, Operating loss = Y, Cash = Z
+FY2024 — Revenue = X, Operating profit = Y
+```
+
+Then investigate *"What changed?"* — and do not assume correlation equals causation.
+
+### Data Reconstruction
+
+If the exact answer is not publicly available, reconstruct it using multiple observable inputs. Examples:
+
+- **Revenue unavailable →** use reported orders, reported customers, average order value, store count, transaction volume, marketplace rankings, company filings, employee count, founder statements, or revenue estimates from reputable sources.
+- **Market size unavailable →** use population, target demographic, penetration, frequency, price, spend, comparable categories, or industry data.
+- **Customer acquisition data unavailable →** use traffic, channel mix, SEO visibility, branded search, paid search, social presence, creator activity, company statements, or customer-acquisition commentary.
+
+**A reconstructed estimate must NEVER be presented as reported company data.** Always label it explicitly as **"Estimated / reconstructed"**, show the methodology and inputs used, and still assign it the appropriate Evidence Standards label below (almost always **D. Analyst estimate** or **E. Inference/hypothesis** — never A or B).
+
+### Search Like an Investigator
+
+Do not run only generic searches such as "Company X revenue." Instead, progressively search different evidence layers and use discovered names, document titles, legal entities, and other clues to create increasingly precise searches — for example: "Company X annual accounts," "Company X Companies House," "Company X company number," "Company X filing history," "Company X revenue 2024," "Company X operating profit," "Company X founder interview," "Company X investor presentation," "Company X funding," "Company X acquisition," "Company X marketing strategy," "Company X campaign," "Company X SEO," "Company X retail expansion," "Company X layoffs," "Company X profitability." If a search result points to a potentially useful document, follow the trail.
+
+### Search for Negative Evidence
+
+Do not only search for evidence supporting the initial hypothesis — actively search for contradictory evidence. For example, if the hypothesis is "Company X became profitable because of brand marketing," also investigate: Was profitability actually driven by cost cutting? Did revenue growth slow? Did headcount fall? Did funding stop? Did pricing change? Did product mix change? Did offline distribution change? Did the company simply reduce spending? The objective is to determine what actually happened, not to produce a compelling story.
+
+### Google/Web Search as a Discovery Layer
+
+Treat web search as an entry point into the evidence ecosystem, not the evidence itself. Use search results to discover documents, company numbers, legal entities, filings, interviews, datasets, reports, people, dates, events, and terminology — then investigate those underlying sources directly.
+
+### Data Hunting
+
+When asked to "find data on X," do not immediately answer with whatever is easiest to find. Determine: (1) What exact data is needed? (2) What unit is required? (3) What geography? (4) What time period? (5) What source would ideally contain it? (6) What alternative sources can approximate it? (7) Can the result be independently triangulated? Search until reaching one of: **A.** strong evidence, **B.** a defensible, clearly-labeled estimate, or **C.** evidence that the data genuinely cannot be obtained. Never manufacture precision.
+
+### Market Research Data Hunt
+
+For market research, investigate whichever of these layers are relevant to the specific question:
+
+- **Macro** — population, GDP, income, demographics, household structure, urbanisation, economic indicators.
+- **Category** — market size, market growth, category penetration, consumer spending, industry structure.
+- **Customer** — number of potential customers, demographics, behavior, frequency, willingness to pay, needs.
+- **Competition** — number of competitors, market shares, revenue, pricing, distribution, funding, growth.
+- **Channel** — retail footprint, ecommerce penetration, marketplace data, search demand, social presence, distribution.
+- **Economics** — pricing, margins, CAC, AOV, frequency, LTV, contribution.
+
+### Case Study Research
+
+For interview/case-study-style questions (e.g. "Should Company X enter Market Y?"), behave like a strategy consultant with a research team. Independently determine what the research requires — market definition, TAM/SAM/SOM, top-down and bottom-up sizing, market growth, customer segmentation, competition, regulatory environment, pricing, channels, economics, entry options, risks, scenarios, recommendation — and do that research rather than waiting for the user to specify every individual step.
+
+### Research Trail
+
+For major research projects, maintain a research trail (alongside the source entries in `sources/`, or as a dedicated section in the relevant `companies/<name>/` or `research/` file) recording: the question, hypothesis, searches performed, sources discovered, important findings, rejected evidence, contradictory evidence, assumptions, calculations, unresolved questions, and final conclusions. This allows the final answer to be audited.
+
+### Stop Condition
+
+Do not research endlessly. Stop when: the key question is answered; additional research is unlikely to materially change the conclusion; evidence has been sufficiently triangulated; or remaining uncertainty is clearly documented. If the evidence is weak, say so. If the evidence is strong, explain why.
+
 ## EVIDENCE STANDARDS
 
 For every material factual claim:
@@ -54,7 +151,7 @@ Clearly distinguish, and label, every claim as one of:
 - **D. Analyst estimate**
 - **E. Inference/hypothesis**
 
-Never fabricate revenue, profit, EBITDA, CAC, ROAS, LTV, margins, customer numbers, or campaign results. If reliable evidence cannot be found, explicitly say the information is unavailable or uncertain — do not fill the gap with a plausible-sounding guess.
+Never fabricate revenue, profit, EBITDA, CAC, ROAS, LTV, margins, customer numbers, or campaign results. If reliable evidence cannot be found, explicitly say the information is unavailable or uncertain — do not fill the gap with a plausible-sounding guess. A disciplined, methodology-shown estimate built under Forensic Research Mode's Data Reconstruction process is not a guess and is permitted — but it must be labeled "Estimated / reconstructed," carry evidence label D or E, and never be presented as A or B.
 
 ## WEB RESEARCH
 
@@ -184,9 +281,11 @@ Skills installed under `.claude/skills/` that are useful for this work include `
 ## Workflow for a Research Request
 
 1. Confirm scope: which company/companies, geography, framework section(s), or playbook the task is in service of.
-2. Gather sources; log them in `sources/` with URL, date, source type, and evidence label (A–E) as they're found.
-3. Populate the relevant `companies/<name>/` dossier (or thematic `research/`, `channels/`, `marketing/`, `branding/`, `financials/` file).
-4. Explicitly work through the Profitability Inflection Point and, where relevant, Meta Diversification questions.
-5. Only draw BabyOrgano-specific conclusions using the BabyOrgano Application checklist — never by analogy alone.
-6. Feed validated findings into the relevant `strategy/` synthesis and, when mature, the corresponding `outputs/` playbook.
-7. No research begins without an explicit request — confirm scope before starting.
+2. Apply Forensic Research Mode's Source Discovery Chain: identify entities (Level 1), hunt for primary evidence (Level 2), reconstruct the timeline (Level 3), triangulate across sources (Level 4) — before settling on an answer.
+3. Gather sources; log them in `sources/` with URL, date, source type, and evidence label (A–E) as they're found. Maintain a research trail for non-trivial questions.
+4. Populate the relevant `companies/<name>/` dossier (or thematic `research/`, `channels/`, `marketing/`, `branding/`, `financials/` file).
+5. Explicitly work through the Profitability Inflection Point and, where relevant, Meta Diversification questions — actively checking for negative/contradictory evidence, not just the convenient story.
+6. Only draw BabyOrgano-specific conclusions using the BabyOrgano Application checklist — never by analogy alone.
+7. Feed validated findings into the relevant `strategy/` synthesis and, when mature, the corresponding `outputs/` playbook.
+8. Apply the Stop Condition: stop once the key question is answered, additional research won't materially change the conclusion, and remaining uncertainty is documented — rather than researching indefinitely.
+9. No research begins without an explicit request — confirm scope before starting.
