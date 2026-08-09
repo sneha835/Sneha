@@ -1,64 +1,53 @@
-# Research Pipeline: YouTube → NotebookLM
+# Research Environment — Operating Instructions
 
-Automated research pipeline that searches YouTube for videos on any topic and sends them to Google NotebookLM for analysis and deliverable generation.
+This repository is a standalone research environment. Its purpose is to research companies, markets, and marketing/business practices, and to build a durable, well-organized knowledge base rather than one-off answers. These instructions are permanent — follow them for every research task in this repo.
 
-## Setup
+## Folder Structure
 
-```bash
-bash setup.sh
+```
+research/
+  india/                  Market, company, and industry research specific to India
+  global/                 Market, company, and industry research outside India (or cross-market/global-scale)
+  profitability/          Research on what makes companies/business models profitable — margins, unit economics, monetization
+  failed-and-struggling/  Post-mortems and case studies on companies that failed, declined, or are struggling — what went wrong
+  campaigns/              Deep dives on specific marketing/ad campaigns (any company, any market)
+
+companies/                Per-company profiles and dossiers (one subfolder per company)
+sources/                  Raw source material — links, transcripts, PDFs, scraped pages, citations — backing any research file
+financials/               Financial data, statements, models, and analysis pulled during research
+marketing/                Marketing strategy, positioning, and campaign analysis not tied to a single company folder
+branding/                 Brand identity, voice, visual identity, and brand strategy research
+channels/                 Channel-specific research (paid, organic, social, retail, D2C, marketplace, etc.)
+strategy/                 Synthesized strategic insights, frameworks, and recommendations drawn from research
+outputs/                  Finished deliverables meant to be shared or presented (reports, decks, briefs, artifacts)
 ```
 
-Then authenticate with NotebookLM in a separate terminal:
+## Core Principles
 
-```bash
-source .venv/bin/activate && notebooklm login
-```
-
-## Important
-
-- Always activate the virtual environment before running scripts: `source .venv/bin/activate`
-- All Python scripts are in `.claude/skills/*/scripts/`
-- All scripts output JSON to stdout for easy chaining
+1. **Sources over assertions.** Every non-trivial claim in a research file should be traceable to something in `sources/`. Save raw material (links, snapshots, transcripts) to `sources/` as you go — don't rely on memory of a fetch that happened mid-conversation.
+2. **Company research lives in one place.** If research is about a specific company, it belongs under `companies/<company-name>/`, even if it also touches profitability, campaigns, or a specific market. Use `research/india/`, `research/global/`, `research/profitability/`, `research/failed-and-struggling/`, and `research/campaigns/` for cross-company or thematic research, and link back to the relevant `companies/<company-name>/` folder rather than duplicating content.
+3. **Raw vs. synthesized.** Raw notes, data pulls, and source material go in `sources/` or the relevant topical folder (`financials/`, `marketing/`, `branding/`, `channels/`). Distilled conclusions, comparisons, and recommendations go in `strategy/`. Keep these distinct — don't mix raw dumps and analysis in the same file.
+4. **Outputs are deliverables, not drafts.** Only place a file in `outputs/` when it's a finished, presentable artifact (report, deck, brief, infographic, etc.). Working drafts stay in the topical folder until they're ready to graduate.
+5. **File naming.** Use lowercase, hyphenated, descriptive filenames with dates where relevant, e.g. `companies/acme-co/financials-2026-08.md`, `research/failed-and-struggling/quibi-postmortem.md`. Avoid vague names like `notes.md` or `research.md`.
+6. **Scope before research.** Before starting a new research task, confirm the topic, geography (India/global), and depth expected. Don't assume — ask if the request is ambiguous.
+7. **No research without a request.** Don't proactively start researching a topic; wait for explicit direction on what to investigate.
 
 ## Available Skills
 
-### `/yt-research <topic>`
-Search YouTube for videos on a topic. Returns structured metadata (title, URL, author, views, duration).
-- If no topic is provided, **ask the user what topic they want to research**.
+This environment has skills installed under `.claude/skills/` that are useful for research work, including:
 
-### `/notebooklm <action>`
-Interact with NotebookLM: create notebooks, add sources, analyze content, generate artifacts.
+- `/yt-research` — search YouTube for videos on a topic
+- `/notebooklm` — send sources to NotebookLM for analysis and artifact generation (infographics, decks, flashcards, reports)
+- `customer-research`, `competitor-alternatives`, `content-strategy`, `seo-audit`, and other marketing skills — useful for company/market/competitive research
+- `product-marketing-context` — useful when research needs to be framed against a specific product/audience
 
-## End-to-End Research Workflow
+Use these where they fit naturally into a research task rather than doing manual equivalents from scratch.
 
-When a user asks to research a topic and send results to NotebookLM:
+## Workflow for a Research Request
 
-1. **Search YouTube** using `/yt-research` — get the video list as JSON
-2. **Extract URLs** from the results
-3. **Create a notebook** via `create_notebook.py --title "[Topic] Research"`
-4. **Add all video URLs** via `add_sources.py --notebook-id <ID> --urls <URLs>`
-5. **Request analysis** via `ask_question.py --notebook-id <ID> --question "Provide a comprehensive analysis of the key themes, insights, and trends across all sources"`
-6. **Generate artifact** via `generate_artifact.py --notebook-id <ID> --type <type> --style "<style>"`
-7. **Present results** to the user
-
-## Example Command
-
-> "Use the yt-research skill to find the 25 latest trending videos on AI agents. Once we have those videos, send them over to NotebookLM using the notebooklm skill. Give me its analysis on the top findings, then have NotebookLM create an infographic in a handwritten / chalkboard style depicting that analysis."
-
-## Marketing Skills
-
-35 marketing skills from [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) are installed in `.claude/skills/`. Categories:
-
-- **CRO**: page-cro, signup-flow-cro, onboarding-cro, form-cro, popup-cro, paywall-upgrade-cro
-- **Content & Copy**: copywriting, copy-editing, cold-email, email-sequence, social-content, lead-magnets
-- **SEO & Discovery**: seo-audit, ai-seo, programmatic-seo, site-architecture, competitor-alternatives, schema-markup, content-strategy
-- **Paid & Measurement**: paid-ads, ad-creative, ab-test-setup, analytics-tracking
-- **Growth & Retention**: referral-program, free-tool-strategy, churn-prevention, community-marketing
-- **Sales & GTM**: revops, sales-enablement, launch-strategy, pricing-strategy
-- **Strategy**: marketing-ideas, marketing-psychology, customer-research, product-marketing-context
-
-### Foundation: Product Marketing Context
-Run `/product-marketing-context` first to set up your product/audience context — all other marketing skills reference this for consistency.
-
-### Marketing Tools
-CLI tools and integration guides are in `.claude/tools/`. See `.claude/tools/REGISTRY.md` for the full index.
+1. Confirm scope: topic, company/companies, geography, and what folder(s) the output belongs in.
+2. Gather sources; save raw material to `sources/` (and `companies/<name>/` if company-specific).
+3. Do the analysis; place it in the appropriate topical folder (`financials/`, `marketing/`, `branding/`, `channels/`, or the relevant `research/` subfolder).
+4. If the task calls for a synthesized recommendation or takeaway, write it to `strategy/`.
+5. If a polished deliverable is requested, produce it in `outputs/`.
+6. Always cite back to `sources/` so findings can be verified later.
