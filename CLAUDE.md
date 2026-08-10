@@ -248,6 +248,145 @@ Give particular focus to companies that reduced dependence on Meta. For each, in
 - Whether creators/influencers replaced paid social or simply supplemented it
 - What evidence exists that diversification improved profitability
 
+## EXECUTION-LEVEL MARKETING FORENSICS
+
+Standard Forensic Research Mode is not enough for marketing questions. It can identify a mechanism ("Minimalist used transparency") but that is not an answer — it stops short of what the brand actually *did*, how customers actually *responded*, and whether it actually *moved the numbers*. For every high-priority marketing case, go one layer deeper and build a Marketing Execution Forensics analysis. The objective of this layer is always the same chain:
+
+> **MECHANISM → ACTUAL EXECUTION → CUSTOMER RESPONSE → BUSINESS RESULT → FINANCIAL RESULT**
+
+Do not stop at the mechanism. Follow the chain as far as evidence allows, and say explicitly where it breaks.
+
+### 1. Marketing Execution Discovery
+
+For each company, investigate what was actually published/run/said, not just the strategy label applied to it after the fact:
+
+- **Brand/Website** — actual site copy, page structure, product-naming conventions, content sections, claims made, design changes over time (use web.archive.org where useful to see historical versions).
+- **Social** — actual formats used (not "they did social media" but which platforms, what content types, posting cadence, what changed over time).
+- **Advertising** — actual creative, formats, and channels used. **Do not claim or estimate ad spend figures unless the company disclosed them (filings, investor decks, founder statements) or a reputable ad-intelligence source is cited.** Direction (rising/falling/flat) can be discussed qualitatively even where the absolute number is unavailable.
+- **Search** — organic and paid search presence and how it evolved (use Semrush data where available).
+- **Creators/Influencers** — actual named creators/campaigns/formats where identifiable, tier (celebrity/macro/micro/nano), and how the mix changed over time.
+- **PR/Earned Media** — actual coverage, what triggered it, and whether it was earned or a paid/sponsored placement (distinguish the two).
+- **Email/CRM** — only what is externally observable (e.g. a disclosed retention metric, a described program). **Do not invent private CRM flows, segmentation logic, or lifecycle emails that cannot be observed.** Mark as "not observable/unavailable" rather than guessing.
+
+### 2. Build a Marketing Timeline
+
+Construct a period-by-period timeline in this format:
+
+`YEAR/PERIOD → BUSINESS STATE → MARKETING CHANGE → PRODUCT CHANGE → CHANNEL CHANGE → FINANCIAL STATE`
+
+Worked example format:
+
+```
+2021 — Early-stage, single hero SKU — Launched ingredient-name-as-product-name content model — No product change yet — D2C-only — Pre-revenue-disclosure / loss-making
+2022 — Scaling — Added category-education blog content — Expanded SKU range — Added marketplaces — Revenue ₹Xcr, still loss-making
+2023 — Growth — [observed change] — [observed change] — [observed change] — Revenue ₹Ycr, EBITDA turns positive
+```
+
+**Do not assume the change caused the outcome.** The timeline records sequence, not causation — causation is tested separately in sections 4 and 6.
+
+### 3. Before/After Marketing Comparison
+
+For any case with a clear "before" and "after" period (a strategic pivot, a management change, a pre/post-acquisition split), build an explicit comparison answering:
+
+- What did they do **before**?
+- What **changed**?
+- What did they do **after**?
+- What changed in **customer behaviour**?
+- What changed **financially**?
+
+Pull whichever of these metrics are available: A&P (advertising & promotion) as % of revenue, revenue growth, gross margin, EBITDA, PAT/net profit, repeat purchase rate, AOV, CAC, channel mix, D2C share, marketplace share, offline share, branded search volume, organic traffic, direct traffic, review volume, and product mix.
+
+**If a metric is unavailable, say unavailable.** Do not estimate a before/after delta from a single data point, and do not fill a missing year with an interpolated guess presented as fact.
+
+### 4. Search for the "Why"
+
+Keep three things separate and never merge them:
+
+- **Founding/executive stated intent** — what the founder/executive said they were trying to do (a direct quote, attributed and dated).
+- **Observed execution** — what was actually published/run, independent of what anyone said about it.
+- **Inferred mechanism** — the analyst's own hypothesis about why the execution worked, clearly marked as inference.
+
+**Do not infer strategic intent merely because the campaign looks clever in hindsight.** A campaign can be a lucky accident, a copy of a competitor, or an agency's idea the founder barely recalls — check founder/executive commentary before assuming a deliberate strategic thesis existed.
+
+### 5. Search for Failed/Abandoned Marketing
+
+Actively look for what a company **stopped** doing, not only what it did: discontinued campaigns, failed product launches, abandoned channels, offline expansion that was scaled back or reversed, reduced influencer/celebrity spend, reduced discounting, reduced performance-marketing spend, agency changes, positioning changes, and killed product lines.
+
+**A successful company can teach us as much from what it stopped doing as what it started doing.** Every case investigated under this methodology must include an explicit check for negative/abandoned marketing evidence — do not report only the strategies that are still visible today.
+
+### 6. Marketing as an Economic System
+
+Where evidence supports it, trace how a marketing mechanism actually flows through to profit, using this chain as the map:
+
+> **ATTENTION → TRAFFIC → CONVERSION → AOV → GROSS MARGIN → REPEAT → LTV → CAC PAYBACK → CONTRIBUTION → EBITDA**
+
+Example link-types to look for (illustrative, not assumed to apply everywhere): transparency/education → trust → conversion; category education → organic search traffic → lower acquisition friction → conversion; hero-product concentration → reviews → search visibility → conversion → repeat; branded IP/campaign → earned media → awareness → branded search → traffic; identity/community → emotional attachment → word of mouth → demand.
+
+**Do NOT assume these effects. Only populate the links that are actually supported by evidence**, and explicitly mark which links in the chain are evidenced vs. which are unverified gaps (this is usually where a popular narrative breaks down — say so plainly rather than smoothing over the gap).
+
+### 7. Marketing Mechanism Evidence Score
+
+Marketing-mechanism claims (i.e., claims that a specific execution caused a specific customer or business response) get their own two-part score, layered on top of — and not a replacement for — the general Evidence Standards A–E claim label used elsewhere in this manual. The general A–E label rates the factual claim itself (e.g., "revenue was ₹347cr" = A if from a filing). This score instead rates the *causal link between a marketing action and an outcome*:
+
+- **Strength (1–4):** `1` = Direct evidence (e.g., company explicitly attributes the outcome to the action) · `2` = Strong inference (tight time correlation + no confounding factor identified) · `3` = Weak inference (correlation exists but plausible confounders are present) · `4` = Unknown (sequence observed, no basis to infer causation).
+- **Quality (A–E):** `A` = actual campaign/creative/product evidence directly observed · `B` = founder/agency description of what was done · `C` = reputable third-party reporting · `D` = secondary/aggregator commentary · `E` = analyst inference with no direct source.
+
+Report both, e.g. "Strength 2 / Quality B." **Never allow an E-quality inference to be written up as a stated fact** — carry the score into the writeup itself (e.g., "management attributes X to Y [Strength 1/Quality B]" vs. "X plausibly relates to Y [Strength 3/Quality E]").
+
+### 8. The Marketing Playbook Table
+
+For every case with a usable mechanism, add a row to a running Marketing Playbook table:
+
+| Mechanism | Company | Exact execution | Customer problem it addressed | Evidence of customer response | Business impact | Profit impact | Transferability to BabyOrgano |
+|---|---|---|---|---|---|---|---|
+
+This table is cumulative across companies and should become the single most-referenced artifact in the project — every BabyOrgano recommendation should be traceable to a row in it.
+
+### 9. Copy This / Don't Copy This
+
+For every company analyzed under this methodology, close with an explicit split between the transferable *principle* and the non-transferable *surface tactic*, e.g.:
+
+- **Minimalist** — COPY: make product proof visible (ingredient-level transparency as the content model). DON'T COPY: simply copying minimalist packaging/aesthetics without the underlying evidence-based content.
+- **Wakefit** — COPY: create proprietary branded IP around an important, recurring consumer behaviour. DON'T COPY: run a stunt campaign just because a comparable one went viral elsewhere.
+- **Beardo** — COPY: own an underserved identity/persona space. DON'T COPY: spend heavily on celebrity endorsement before repeat-purchase economics are proven.
+
+The "don't copy" half is mandatory, not optional — it is where most of the risk to BabyOrgano actually lives.
+
+### 10. Investigating Acquisitions Correctly
+
+When a company in scope was acquired, do not stop at "Company X was acquired by Company Y." Research, where disclosed: acquisition price/valuation, revenue and EBITDA at the time of the deal, the acquirer's stated strategic rationale, the target's category position, customer base, distribution reach, IP, brand equity, growth trajectory, and profitability trajectory at the time of acquisition — then explicitly classify the deal as one of:
+
+- **Acquired because profitable** — the business was making money and the acquirer bought the profit stream.
+- **Acquired because strategically valuable** — the business was not necessarily profitable, but the acquirer valued the brand, category position, capability, or distribution it provided.
+- **Acquired despite losses** — the business was loss-making and the acquirer accepted that in exchange for something else (talent, category entry, defensive blocking of a competitor, etc.).
+
+**This distinction is critical** and must never be collapsed into a generic "got acquired = success" narrative — the evidence in this repo already shows post-acquisition financial trajectories diverge sharply even within the same acquirer (see Marico's Beardo vs. Emami's The Man Company as a documented contrast).
+
+### Scope Discipline for Marketing Forensics Passes
+
+This methodology is deliberately deep, not deliberately wide. Any research pass run under this layer should stay in the range of roughly **8–12 Indian companies and 4–6 global comparison companies** unless a future request explicitly raises that cap. Prioritize cases with strong evidence density and genuinely interesting marketing mechanisms over completeness. **Do not build another large candidate universe as a substitute for depth.**
+
+### Report Schema: `outputs/d2c-marketing-forensics.md`
+
+When this methodology's findings are mature enough to stage as a deliverable, use this fixed section structure (consistent with the numbering/evidence-labeling conventions already established in `outputs/d2c-profitability-research.md`):
+
+1. Executive Summary
+2. Top Marketing Mechanisms
+3. Marketing Execution Forensics (per company, following section 1 above)
+4. Company Timelines (per company, following section 2 above)
+5. Before → Change → After (per company, following section 3 above)
+6. Marketing → Customer Behaviour → Economics (per company, following section 6 above)
+7. Profitability / Acquisition Analysis (following section 10 above where relevant)
+8. Failed / Abandoned Strategies (following section 5 above)
+9. Copy This / Don't Copy This (the full table from section 9 above)
+10. Indian Playbook
+11. Global Comparison
+12. BabyOrgano Application (using the BabyOrgano Application checklist below)
+13. Evidence Gaps
+14. Research Appendix (sources, research trail, rejected/contradictory evidence)
+
+**Do not produce generic marketing advice.** Every important recommendation in this deliverable must trace back to a specific researched company, a specific piece of evidence, and (where applicable) a specific row in the Marketing Playbook table.
+
 ## BABYORGANO APPLICATION
 
 Do not recommend a strategy for BabyOrgano merely because a famous brand did it. Only recommend a strategy when there is a reasonable evidence base, and for each recommendation explain:
@@ -273,6 +412,7 @@ The objective is not generic company summaries. Research should progressively bu
 7. Agency Evaluation Framework
 8. BabyOrgano Strategic Recommendations
 9. BabyOrgano 90-Day Experiment Roadmap
+10. D2C Marketing Execution Forensics (`outputs/d2c-marketing-forensics.md`) — built using the Execution-Level Marketing Forensics methodology above, on a deliberately narrow 8–12 India / 4–6 global company set
 
 ## Available Skills
 
@@ -285,7 +425,8 @@ Skills installed under `.claude/skills/` that are useful for this work include `
 3. Gather sources; log them in `sources/` with URL, date, source type, and evidence label (A–E) as they're found. Maintain a research trail for non-trivial questions.
 4. Populate the relevant `companies/<name>/` dossier (or thematic `research/`, `channels/`, `marketing/`, `branding/`, `financials/` file).
 5. Explicitly work through the Profitability Inflection Point and, where relevant, Meta Diversification questions — actively checking for negative/contradictory evidence, not just the convenient story.
-6. Only draw BabyOrgano-specific conclusions using the BabyOrgano Application checklist — never by analogy alone.
-7. Feed validated findings into the relevant `strategy/` synthesis and, when mature, the corresponding `outputs/` playbook.
-8. Apply the Stop Condition: stop once the key question is answered, additional research won't materially change the conclusion, and remaining uncertainty is documented — rather than researching indefinitely.
-9. No research begins without an explicit request — confirm scope before starting.
+6. For marketing-specific questions, go one layer deeper using Execution-Level Marketing Forensics — do not stop at naming a mechanism; follow MECHANISM → ACTUAL EXECUTION → CUSTOMER RESPONSE → BUSINESS RESULT → FINANCIAL RESULT as far as evidence allows, score causal claims with the Marketing Mechanism Evidence Score, and check explicitly for failed/abandoned marketing.
+7. Only draw BabyOrgano-specific conclusions using the BabyOrgano Application checklist — never by analogy alone.
+8. Feed validated findings into the relevant `strategy/` synthesis and, when mature, the corresponding `outputs/` playbook.
+9. Apply the Stop Condition: stop once the key question is answered, additional research won't materially change the conclusion, and remaining uncertainty is documented — rather than researching indefinitely.
+10. No research begins without an explicit request — confirm scope before starting.
